@@ -16,7 +16,7 @@ public class Main {
             } else {
                 throw new IllegalArgumentException("Cannot automatically determine day, since it's not between dec 1-25");
             }
-        } else if (args[0].equals("*")){
+        } else if (args[0].equals("all")){
             for (int i = 1; i <= 25; i++) {
                 if (!runDay(i)) {
                     return;

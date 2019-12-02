@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -95,18 +94,7 @@ public class DataReader {
     }
 
     private static Path getPath(int day) {
-        String filename = String.format("day%02d.txt", day);
-        URL url = DataReader.class.getResource("/days/" + filename);
-        if (url == null) {
-            Path basePath = getBasePath();
-            return basePath == null ? null : basePath.resolve("days").resolve(filename);
-        }
-        try {
-            return Paths.get(url.toURI());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return Paths.get("");
-        }
+        return Paths.get("problem_input", String.format("day%02d.txt", day));
     }
 
     private static void write(Path path, List<String> lines) throws IOException {
@@ -120,15 +108,5 @@ public class DataReader {
                 e.printStackTrace();
             }
         }).start();
-    }
-
-    private static Path getBasePath() {
-        try {
-            return Paths.get(DataReader.class.getProtectionDomain().getCodeSource().getLocation()
-                    .toURI());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 }
