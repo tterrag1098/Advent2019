@@ -1,16 +1,15 @@
 package com.tterrag.advent2019.util;
 
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import lombok.RequiredArgsConstructor;
@@ -104,6 +103,26 @@ public abstract class Day implements Runnable {
 
     protected <E, T extends Collection<E>> List<E> parseFlatList(Function<String, T> parser) {
         return parseFlat(parser).collect(Collectors.toList());
+    }
+    
+    protected Stream<String> csv() {
+        return parseFlat(s -> Arrays.asList(s.split("\\s*,\\s*")));
+    }
+    
+    protected <T> Stream<T> csv(Function<String, T> parser) {
+        return csv().map(parser);
+    }
+    
+    protected <T> List<T> csvList(Function<String, T> parser) {
+        return csv(parser).collect(Collectors.toList());
+    }
+    
+    protected IntStream csvInts() {
+        return csv().mapToInt(Integer::parseInt);
+    }
+    
+    protected int[] csvIntArray() {
+        return csvInts().toArray();
     }
 
     protected String blob() {
