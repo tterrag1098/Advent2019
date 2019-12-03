@@ -105,8 +105,24 @@ public abstract class Day implements Runnable {
         return parseFlat(parser).collect(Collectors.toList());
     }
     
+    protected List<String> csvList(String line) {
+        return Arrays.asList(line.split("\\s*,\\s*"));
+    }
+    
+    protected Stream<String> csv(String line) {
+        return csvList(line).stream();
+    }
+    
+    protected IntStream csvInts(String line) {
+        return csv(line).mapToInt(Integer::parseInt);
+    }
+    
+    protected int[] csvIntArray(String line) {
+        return csvInts(line).toArray();
+    }
+    
     protected Stream<String> csv() {
-        return parseFlat(s -> Arrays.asList(s.split("\\s*,\\s*")));
+        return parseFlat(this::csvList);
     }
     
     protected <T> Stream<T> csv(Function<String, T> parser) {
