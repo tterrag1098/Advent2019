@@ -3,7 +3,6 @@ package com.tterrag.advent2019.taketwo;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Set;
 
 import com.tterrag.advent2019.util.Day;
@@ -113,13 +112,9 @@ public class Day03 extends Day {
     @Override
     protected Result doParts() {
         Set<Point> intersections = new HashSet<>();
-        ListIterator<Segment> itrA = pathA.listIterator();
-        while (itrA.hasNext()) {
-            int idx = itrA.nextIndex();
-            Segment s1 = itrA.next();
-            ListIterator<Segment> itrB = pathB.listIterator(idx);
-            while (itrB.hasNext()) {
-                Point i = s1.intersection(itrB.next());
+        for (Segment s1 : pathA) {
+            for (Segment s2 : pathB) {
+                Point i = s1.intersection(s2);
                 if (i != null) {
                     intersections.add(i);
                 }
