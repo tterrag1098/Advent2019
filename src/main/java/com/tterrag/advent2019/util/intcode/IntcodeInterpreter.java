@@ -46,15 +46,14 @@ public class IntcodeInterpreter {
     @Value
     @Getter(AccessLevel.NONE)
     class Argument {
-        int[] data;
         ParameterMode mode;
         int arg;
         
-        int get() {
+        int get(int[] data) {
             return mode.apply(arg, data);
         }
         
-        void set(int val) {
+        void set(int[] data, int val) {
             data[arg] = val;
         }
     }
@@ -63,6 +62,7 @@ public class IntcodeInterpreter {
     @Getter(AccessLevel.NONE)
     class Context {
         Argument[] args;
+        int[] data;
         
         int input() {
             return input;
@@ -73,11 +73,11 @@ public class IntcodeInterpreter {
         }
         
         int get(int arg) {
-            return args[arg].get();
+            return args[arg].get(data);
         }
         
         void set(int arg, int val) {
-            args[arg].set(val);
+            args[arg].set(data, val);
         }
     }
     
@@ -93,11 +93,11 @@ public class IntcodeInterpreter {
             if (op == Opcodes.HALT) break;
             Argument[] args = new Argument[op.args()];
             for (int i = 0; i < args.length; i++) {
-                args[i] = new Argument(data,  ParameterMode.values()[modes % 10], data[ptr + i + 1]);
+                args[i] = new Argument(ParameterMode.values()[modes % 10], data[ptr + i + 1]);
                 modes /= 10;
             }
             int prevPtr = ptr;
-            ptr = op.run(new Context(args), ptr);
+            ptr = op.run(new Context(args, data), ptr);
             if (prevPtr == ptr) {
                 ptr += op.args() + 1;
             }
