@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -47,7 +48,13 @@ public abstract class Day implements Runnable {
         Result res = doParts();
         long after = System.nanoTime();
         System.out.printf("Part 1: %s\nPart 2: %s\n", res.getP1(), res.getP2());
-        System.out.printf("Completed in %.4fs\n\n", (after - before) / 1_000_000_000f);
+        long delta = after - before;
+        long seconds = TimeUnit.NANOSECONDS.toSeconds(delta);
+        if (seconds > 0) {
+            System.out.printf("Completed in %.4fs\n\n", delta / 1_000_000_000f);
+        } else {
+            System.out.printf("Completed in %.2fms\n\n", delta / 1_000_000f);
+        }
     }
 
     protected Object part1() {
