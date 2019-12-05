@@ -44,7 +44,7 @@ public class Day05 extends Day {
             return ptr;
         }),
         OUTPUT(4, 1, (modes, args, data, ptr) -> {
-            output = data[args[0]];
+            output = modes[0].apply(args[0], data);
             return ptr;
         }),
         JNZ(5, 2, (modes, args, data, ptr) -> modes[0].apply(args[0], data) != 0 ? modes[1].apply(args[1], data) : ptr),
@@ -82,6 +82,7 @@ public class Day05 extends Day {
     
     @Override
     protected Object part1() {
+        output = 0;
         inputParam = 1;
         simulate();
         return output;
@@ -89,6 +90,7 @@ public class Day05 extends Day {
     
     @Override
     protected Object part2() {
+        output = 0;
         inputParam = 5;
         simulate();
         return output;
@@ -111,6 +113,9 @@ public class Day05 extends Day {
                 argModes[i] = ParameterMode.values()[(modes / ((int) Math.pow(10, i))) % 10];
             }
             int prevPtr = ptr;
+            if (output != 0) {
+                throw new IllegalStateException("Non-zero error code: " + output + " @ " + ptr);
+            }
             ptr = op.func.run(argModes, args, data, ptr);
             if (prevPtr == ptr) {
                 ptr += op.args + 1;
