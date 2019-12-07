@@ -3,6 +3,7 @@ package com.tterrag.advent2019.util.intcode;
 import java.util.Arrays;
 import java.util.function.BiFunction;
 import java.util.function.IntConsumer;
+import java.util.function.IntSupplier;
 
 import com.tterrag.advent2019.util.intcode.Opcode.OpcodeEnum;
 
@@ -13,19 +14,20 @@ import lombok.Value;
 
 public class IntcodeInterpreter {
     
-    private final int input;
+    private final IntSupplier input;
     private final IntConsumer output;
+    @Getter
     private int lastOutput;
     
     public IntcodeInterpreter() {
-        this(0);
+        this(() -> 0);
     }
     
-    public IntcodeInterpreter(int input) {
+    public IntcodeInterpreter(IntSupplier input) {
         this(input, i -> System.out.printf("Program output: %d\n", i));
     }
     
-    public IntcodeInterpreter(int input, IntConsumer output) {
+    public IntcodeInterpreter(IntSupplier input, IntConsumer output) {
         this.input = input;
         this.output = output.andThen(i -> lastOutput = i);
     }
@@ -65,7 +67,7 @@ public class IntcodeInterpreter {
         int[] data;
         
         int input() {
-            return input;
+            return input.getAsInt();
         }
         
         void output(int out) {
