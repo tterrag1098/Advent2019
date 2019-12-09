@@ -9,11 +9,11 @@ public class Day09 extends Day {
 
     @Override
     protected Object part1() {
-        return new IntcodeInterpreter(() -> 1L).execute(input);
+        return new IntcodeInterpreter(1).execute(input);
     }
     
     @Override
     protected Object part2() {
-        return new IntcodeInterpreter(() -> 2L).execute(input);
+        return new IntcodeInterpreter(2).execute(input);
     }
 }

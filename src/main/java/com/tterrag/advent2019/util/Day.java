@@ -129,6 +129,14 @@ public abstract class Day implements Runnable {
         return csvInts(line).toArray();
     }
     
+    protected LongStream csvLongs(String line) {
+        return csv(line).mapToLong(Long::parseLong);
+    }
+    
+    protected long[] csvLongArray(String line) {
+        return csvLongs(line).toArray();
+    }
+    
     protected Stream<String> csv() {
         return parseFlat(this::csvList);
     }
@@ -139,6 +147,14 @@ public abstract class Day implements Runnable {
     
     protected <T> List<T> csvList(Function<String, T> parser) {
         return csv(parser).collect(Collectors.toList());
+    }
+    
+    protected IntStream csvInts() {
+        return csv().mapToInt(Integer::parseInt);
+    }
+    
+    protected int[] csvIntArray() {
+        return csvInts().toArray();
     }
     
     protected LongStream csvLongs() {

@@ -3,7 +3,6 @@ package com.tterrag.advent2019.days;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.function.LongSupplier;
 import java.util.stream.IntStream;
 
 import com.tterrag.advent2019.util.Day;
@@ -106,17 +105,7 @@ public class Day07 extends Day {
             return vms[vms.length - 1].interpreter.getLastOutput();
         } else {
             for (int i = 0; i < phases.length; i++) {
-                final int a = i;
-                final long b = lastOutput;
-                lastOutput = new IntcodeInterpreter(new LongSupplier() {
-                    boolean first = true;
-                    @Override
-                    public long getAsLong() {
-                        long ret = first ? phases[a] : b;
-                        first = false;
-                        return ret;
-                    }
-                }).execute(input);
+                lastOutput = new IntcodeInterpreter(phases[i], lastOutput).execute(input);
             }
         }
         return lastOutput;
