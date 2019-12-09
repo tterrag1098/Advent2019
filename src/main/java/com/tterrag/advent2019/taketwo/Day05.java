@@ -9,7 +9,7 @@ public class Day05 extends Day {
         new Day05().run();
     }
     
-    private final int[] input = csvIntArray();
+    private final long[] input = csvLongArray();
     
     @Override
     protected Object part1() {

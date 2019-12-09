@@ -75,7 +75,7 @@ public class Day05 extends Day {
         private final Op func;
     }
     
-    private final int[] input = csvIntArray();
+    private final int[] input = csvLongs().mapToInt(l -> (int) l).toArray();
     
     private static int inputParam;
     private static int output;

@@ -6,7 +6,7 @@ import com.tterrag.advent2019.util.Day;
 
 public class Day02 extends Day {
     
-    private final int[] ops = csvIntArray();
+    private final int[] ops = csvLongs().mapToInt(l -> (int) l).toArray();
 
     @Override
     protected Object part1() {

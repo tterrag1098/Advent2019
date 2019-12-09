@@ -3,7 +3,7 @@ package com.tterrag.advent2019.days;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.function.IntSupplier;
+import java.util.function.LongSupplier;
 import java.util.stream.IntStream;
 
 import com.tterrag.advent2019.util.Day;
@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 public class Day07 extends Day {
     
-    private final int[] input = csvIntArray();
+    private final long[] input = csvLongArray();
 
     @Override
     protected Object part1() {
@@ -25,19 +25,19 @@ public class Day07 extends Day {
         return runPermutations(new int[] { 5, 6, 7, 8, 9 }, true);
     }
     
-    private int runPermutations(int[] phases, boolean loop) {
+    private long runPermutations(int[] phases, boolean loop) {
         int[] indices = new int[phases.length];
         for (int i = 0; i < indices.length; i++) {
             indices[i] = 0;
         }
         
-        int max = run(phases, loop);
+        long max = run(phases, loop);
          
         int i = 0;
         while (i < phases.length) {
             if (indices[i] < i) {
                 swap(phases, i % 2 == 0 ?  0: indices[i], i);
-                int res = run(phases, loop);
+                long res = run(phases, loop);
                 max = Math.max(max, res);
                 indices[i]++;
                 i = 0;
@@ -61,7 +61,7 @@ public class Day07 extends Day {
         private final int phase;
         private IntcodeInterpreter interpreter;
         
-        private BlockingQueue<Integer> inputQueue = new LinkedBlockingQueue<>();
+        private BlockingQueue<Long> inputQueue = new LinkedBlockingQueue<>();
         
         private boolean primed;
         
@@ -85,8 +85,8 @@ public class Day07 extends Day {
         }
     }
     
-    private int run(int[] phases, boolean loop) {
-        int lastOutput = 0;
+    private long run(int[] phases, boolean loop) {
+        long lastOutput = 0;
         if (loop) {
             VM[] vms = IntStream.of(phases).mapToObj(VM::new).toArray(VM[]::new);
             for (int i = 0; i < vms.length; i++) {
@@ -95,7 +95,7 @@ public class Day07 extends Day {
             for (VM vm : vms) {
                 vm.start();
             }
-            vms[0].inputQueue.add(0);
+            vms[0].inputQueue.add(0L);
             for (VM vm : vms) {
                 try {
                     vm.join();
@@ -107,12 +107,12 @@ public class Day07 extends Day {
         } else {
             for (int i = 0; i < phases.length; i++) {
                 final int a = i;
-                final int b = lastOutput;
-                lastOutput = new IntcodeInterpreter(new IntSupplier() {
+                final long b = lastOutput;
+                lastOutput = new IntcodeInterpreter(new LongSupplier() {
                     boolean first = true;
                     @Override
-                    public int getAsInt() {
-                        int ret = first ? phases[a] : b;
+                    public long getAsLong() {
+                        long ret = first ? phases[a] : b;
                         first = false;
                         return ret;
                     }

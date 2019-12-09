@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import lombok.RequiredArgsConstructor;
@@ -140,12 +141,12 @@ public abstract class Day implements Runnable {
         return csv(parser).collect(Collectors.toList());
     }
     
-    protected IntStream csvInts() {
-        return csv().mapToInt(Integer::parseInt);
+    protected LongStream csvLongs() {
+        return csv().mapToLong(Long::parseLong);
     }
     
-    protected int[] csvIntArray() {
-        return csvInts().toArray();
+    protected long[] csvLongArray() {
+        return csvLongs().toArray();
     }
 
     protected String blob() {
