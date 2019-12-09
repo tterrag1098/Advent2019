@@ -1,33 +1,48 @@
 package com.tterrag.advent2019.util.intcode;
 
 import java.util.Arrays;
-import java.util.function.BiFunction;
+import java.util.Iterator;
 import java.util.function.LongConsumer;
 import java.util.function.LongSupplier;
 
-import com.tterrag.advent2019.util.intcode.Opcode.OpcodeEnum;
-
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
 public class IntcodeInterpreter {
     
+    private static final int MEMORY_BUFFER = 1000;
+    
     private final LongSupplier input;
     private final LongConsumer output;
     
-    private long[] program;
+    long[] program;
     @Getter
     private long lastOutput;
-    private int relativeBase;
+    int relativeBase;
     
     public IntcodeInterpreter() {
-        this(() -> 0);
+        this(0);
+    }
+    
+    public IntcodeInterpreter(long... input) {
+        this(Arrays.stream(input)::iterator);
+    }
+    
+    public IntcodeInterpreter(Iterable<Long> input) {
+        this(supplyFromIterable(input));
     }
     
     public IntcodeInterpreter(LongSupplier input) {
         this(input, i -> System.out.printf("Program output: %d\n", i));
+    }
+    
+    public IntcodeInterpreter(LongConsumer output, long... input) {
+        this(Arrays.stream(input)::iterator, output);
+    }
+    
+    public IntcodeInterpreter(Iterable<Long> input, LongConsumer output) {
+        this(supplyFromIterable(input), output);
     }
     
     public IntcodeInterpreter(LongSupplier input, LongConsumer output) {
@@ -35,19 +50,14 @@ public class IntcodeInterpreter {
         this.output = output.andThen(i -> lastOutput = i);
     }
     
-    @RequiredArgsConstructor
-    enum ParameterMode {
-        POSITION((i, interpreter) -> interpreter.program[i.intValue()]),
-        IMMEDIATE((i, interpreter) -> i),
-        RELATIVE((i, interpreter) -> 
-        interpreter.program[(int) (i + interpreter.relativeBase)])
-        ;
-        
-        private final BiFunction<Long, IntcodeInterpreter, Long> func;
-        
-        long apply(long reg, IntcodeInterpreter interpreter) {
-            return func.apply(reg, interpreter);
-        }
+    private static LongSupplier supplyFromIterable(Iterable<Long> iterable) {
+        return new LongSupplier() {
+            Iterator<Long> itr = iterable.iterator();
+            @Override
+            public long getAsLong() {
+                return itr.next();
+            }
+        };
     }
     
     @Value
@@ -57,15 +67,11 @@ public class IntcodeInterpreter {
         long arg;
         
         long get() {
-            return mode.apply(arg, IntcodeInterpreter.this);
+            return mode.read(arg, IntcodeInterpreter.this);
         }
         
         void set(long val) {
-            if (mode == ParameterMode.RELATIVE) {
-                IntcodeInterpreter.this.program[(int) arg + relativeBase] = val;
-            } else {
-                IntcodeInterpreter.this.program[(int) arg] = val;
-            }
+            IntcodeInterpreter.this.program[mode.write(arg, IntcodeInterpreter.this)] = val;
         }
     }
     
@@ -95,23 +101,29 @@ public class IntcodeInterpreter {
         }
     }
     
+    static int safeCast(long l) {
+        int ret = (int) l;
+        if (ret != l) throw new IllegalArgumentException("Invalid 64-bit value " + l + " expected int");
+        return ret;
+    }
+    
     public long execute(long[] program) {
-        this.program = Arrays.copyOf(program, program.length + 1000);
+        this.program = Arrays.copyOf(program, program.length + MEMORY_BUFFER);
         int ptr = 0;
         while (true) {
             long instr = this.program[ptr];
             int id = (int) (instr % 100L);
             long modes = instr / 100;
-            OpcodeEnum op = Opcodes.byId.get(id);
+            Opcode op = Opcode.byId.get(id);
             if (op == null) throw new IllegalStateException("Invalid opcode: " + id + " @ " + ptr);
-            if (op == Opcodes.HALT) break;
+            if (op == Opcode.HALT) break;
             Argument[] args = new Argument[op.args()];
             for (int i = 0; i < args.length; i++) {
-                args[i] = new Argument(ParameterMode.values()[(int) (modes % 10)], this.program[ptr + i + 1]);
+                args[i] = new Argument(ParameterMode.values()[(int) (modes % 10L)], this.program[ptr + i + 1]);
                 modes /= 10;
             }
             int prevPtr = ptr;
-            ptr = op.run(new Context(args), ptr);
+            ptr = op.apply(new Context(args), ptr);
             if (prevPtr == ptr) {
                 ptr += op.args() + 1;
             }
