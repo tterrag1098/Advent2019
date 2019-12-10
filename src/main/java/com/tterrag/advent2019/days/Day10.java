@@ -123,7 +123,6 @@ public class Day10 extends Day {
             Point p = itr.next();
             if (station.canSee(p)) {
                 itr.remove();
-                System.out.println(p);
                 if (++cnt == 200) {
                     return (p.x * 100) + p.y;
                 }
