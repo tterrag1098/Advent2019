@@ -17,7 +17,7 @@ public class Day11 extends Day {
     
     @Value
     @Wither
-    class Point implements Comparable<Point> {
+    static class Point implements Comparable<Point> {
         int x, y;
         
         @Override

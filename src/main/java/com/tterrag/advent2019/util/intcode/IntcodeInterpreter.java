@@ -106,7 +106,7 @@ public class IntcodeInterpreter {
         if (ret != l) throw new IllegalArgumentException("Invalid 64-bit value " + l + " expected int");
         return ret;
     }
-    
+
     public long execute(long[] program) {
         this.program = Arrays.copyOf(program, program.length + MEMORY_BUFFER);
         int ptr = 0;
