@@ -73,6 +73,11 @@ public abstract class Day implements Runnable {
     protected int getDayId() {
         return Integer.parseInt(getClass().getSimpleName().toLowerCase(Locale.ROOT).substring(3));
     }
+    
+    protected void setData(String data) {
+        lines.clear();
+        lines.addAll(Arrays.asList(data.split("\r?\n")));
+    }
 
     protected Stream<String> inputStream(BufferedReader r) {
         return r.lines();
