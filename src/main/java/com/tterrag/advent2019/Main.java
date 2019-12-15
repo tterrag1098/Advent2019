@@ -27,10 +27,15 @@ public class Main {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private static boolean runDay(int dayId) {
         try {
-            @SuppressWarnings("unchecked")
-            Class<? extends Day> dayClass = (Class<? extends Day>) Class.forName(Main.class.getCanonicalName().replaceAll("Main", "days.Day" + String.format("%02d", dayId)));
+            Class<? extends Day> dayClass;
+            try {
+                dayClass = (Class<? extends Day>) Class.forName(Main.class.getCanonicalName().replaceAll("Main", "taketwo.Day" + String.format("%02d", dayId)));
+            } catch (ClassNotFoundException e) {
+                dayClass = (Class<? extends Day>) Class.forName(Main.class.getCanonicalName().replaceAll("Main", "days.Day" + String.format("%02d", dayId)));
+            }
 
             System.out.println("Day " + dayId + ": ");
             Day day = dayClass.getConstructor().newInstance();
