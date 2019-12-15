@@ -34,7 +34,7 @@ public class IntcodeInterpreter {
     }
     
     public IntcodeInterpreter(LongSupplier input) {
-        this(input, i -> System.out.printf("Program output: %d\n", i));
+        this(input, i -> {});
     }
     
     public IntcodeInterpreter(LongConsumer output, long... input) {

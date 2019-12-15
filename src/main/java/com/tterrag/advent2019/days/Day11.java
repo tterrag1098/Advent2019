@@ -41,7 +41,6 @@ public class Day11 extends Day {
             boolean painting = true;
             @Override
             public void accept(long value) {
-                System.out.println(value);
                 if (painting) {
                     painted.put(robotpos, value);
                 } else {
