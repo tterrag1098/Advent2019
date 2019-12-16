@@ -16,7 +16,6 @@ public class Day16 extends Day {
     }
     
     private int[] fft(int[] input, int phases) {
-        System.out.println(Arrays.toString(input));
         int[] output = Arrays.copyOf(input, input.length);
         for (int phase = 0; phase < phases; phase++) {
             for (int i = 0; i < output.length; i++) {
@@ -51,7 +50,7 @@ public class Day16 extends Day {
         int skip = Integer.parseInt(Arrays.stream(this.input).limit(7).mapToObj(Integer::toString).collect(Collectors.joining()));
         if (skip < input.length / 2) throw new IllegalStateException();
         for (int i = 0; i < 100; i++) {
-            for (int j = input.length - 1; j >= input.length / 2; j--) {
+            for (int j = input.length - 1; j >= skip; j--) {
                 input[j] = j == input.length - 1 ? input[j] : input[j + 1] + input[j];
                 input[j] %= 10;
             }
