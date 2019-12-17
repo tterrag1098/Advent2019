@@ -11,7 +11,7 @@ import lombok.Value;
 
 public class IntcodeInterpreter {
     
-    private static final int MEMORY_BUFFER = 1000;
+    private static final int MEMORY_BUFFER = 5000;
     
     private final LongSupplier input;
     private final LongConsumer output;
