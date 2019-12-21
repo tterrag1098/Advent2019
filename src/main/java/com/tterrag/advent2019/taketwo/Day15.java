@@ -1,4 +1,4 @@
-package com.tterrag.advent2019.days;
+package com.tterrag.advent2019.taketwo;
 
 import java.util.ArrayDeque;
 import java.util.Collections;
