@@ -16,6 +16,7 @@ public class IntcodeInterpreter {
     private final LongSupplier input;
     private final LongConsumer output;
     
+    @Getter
     long[] program;
     @Getter
     private long lastOutput;
